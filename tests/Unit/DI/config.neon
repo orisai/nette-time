@@ -1,0 +1,2 @@
+extensions:
+	time: OriNette\Time\DI\TimeExtension

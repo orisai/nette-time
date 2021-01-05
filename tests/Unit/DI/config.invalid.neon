@@ -1,0 +1,5 @@
+extensions:
+	time: OriNette\Time\DI\TimeExtension
+
+time:
+	timezone: unknown/timezone
