@@ -11,14 +11,28 @@ use function date_default_timezone_get;
 use function date_default_timezone_set;
 use function dirname;
 use function ini_get;
+use function mkdir;
+use const PHP_VERSION_ID;
 
 final class TimeExtensionTest extends TestCase
 {
 
+	private string $rootDir;
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->rootDir = dirname(__DIR__, 3);
+		if (PHP_VERSION_ID < 81_000) {
+			@mkdir("$this->rootDir/var/build");
+		}
+	}
+
 	public function testBasic(): void
 	{
-		$configurator = new ManualConfigurator(dirname(__DIR__, 3));
-		$configurator->setDebugMode(true);
+		$configurator = new ManualConfigurator($this->rootDir);
+		$configurator->setForceReloadContainer();
 		$configurator->addConfig(__DIR__ . '/config.neon');
 
 		date_default_timezone_set('Europe/Prague');
@@ -35,8 +49,8 @@ final class TimeExtensionTest extends TestCase
 
 	public function testUnknownTimezone(): void
 	{
-		$configurator = new ManualConfigurator(dirname(__DIR__, 3));
-		$configurator->setDebugMode(true);
+		$configurator = new ManualConfigurator($this->rootDir);
+		$configurator->setForceReloadContainer();
 		$configurator->addConfig(__DIR__ . '/config.invalid.neon');
 
 		$this->expectException(InvalidArgument::class);
