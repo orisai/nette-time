@@ -5,6 +5,7 @@ namespace Tests\OriNette\Time\Unit\DI;
 use Brick\DateTime\Clock;
 use Brick\DateTime\Clock\SystemClock;
 use OriNette\DI\Boot\ManualConfigurator;
+use OriNette\Time\ClockGetter;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use PHPUnit\Framework\TestCase;
 use function date_default_timezone_get;
@@ -40,8 +41,10 @@ final class TimeExtensionTest extends TestCase
 
 		$container = $configurator->createContainer();
 
-		self::assertInstanceOf(SystemClock::class, $container->getByType(Clock::class));
-		self::assertInstanceOf(SystemClock::class, $container->getService('time.clock'));
+		$clock = $container->getService('time.clock');
+		self::assertInstanceOf(SystemClock::class, $clock);
+		self::assertSame($clock, $container->getByType(Clock::class));
+		self::assertSame($clock, ClockGetter::get());
 
 		self::assertSame('UTC', date_default_timezone_get());
 		self::assertSame('UTC', ini_get('date.timezone'));

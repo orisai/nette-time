@@ -6,8 +6,10 @@ use Brick\DateTime\Clock;
 use Brick\DateTime\Clock\SystemClock;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
+use Nette\DI\Definitions\ServiceDefinition;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
+use OriNette\Time\ClockGetter;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use stdClass;
 use function date_default_timezone_get;
@@ -31,18 +33,27 @@ final class TimeExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$config = $this->config;
 
-		$this->registerClock($builder);
+		$clockDefinition = $this->registerClock($builder);
+		$this->registerClockGetter($clockDefinition);
 		$this->configureTimezone($config->timezone);
 	}
 
-	protected function registerClock(ContainerBuilder $builder): void
+	private function registerClock(ContainerBuilder $builder): ServiceDefinition
 	{
-		$builder->addDefinition($this->prefix('clock'))
+		return $builder->addDefinition($this->prefix('clock'))
 			->setFactory(SystemClock::class)
 			->setType(Clock::class);
 	}
 
-	protected function configureTimezone(string $timezone): void
+	private function registerClockGetter(ServiceDefinition $clockDefinition): void
+	{
+		$init = $this->getInitialization();
+		$init->addBody(ClockGetter::class . '::set($this->getService(?));', [
+			$clockDefinition->getName(),
+		]);
+	}
+
+	private function configureTimezone(string $timezone): void
 	{
 		$currentTz = date_default_timezone_get();
 		if (!@date_default_timezone_set($timezone)) {

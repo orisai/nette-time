@@ -7,6 +7,7 @@ Clock and timezone configuration for Nette
 - [Setup](#setup)
 - [Timezone](#timezone)
 - [Clock](#clock)
+- [Static clock getter](#static-clock-getter)
 
 ## Setup
 
@@ -69,3 +70,14 @@ services:
 ```
 
 To learn more about `Clock` and related date and time implementation, check used [brick/date-time](https://github.com/brick/date-time) package.
+
+## Static clock getter
+
+Are you lazy? I am too.
+
+```php
+use OriNette\Time\ClockGetter;
+
+$clock = ClockGetter::get();
+$time = $clock->getTime();
+```
