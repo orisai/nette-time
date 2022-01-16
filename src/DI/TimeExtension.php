@@ -66,7 +66,7 @@ final class TimeExtension extends CompilerExtension
 		$initialization = $this->getInitialization();
 		$initialization->addBody(
 			<<<'PHP'
-	date_default_timezone_set(?);
+date_default_timezone_set(?);
 ini_set('date.timezone', ?);
 PHP,
 			[
