@@ -21,7 +21,7 @@ Register DI extension
 
 ```neon
 extensions:
-    time: OriNette\Time\DI\TimeExtension
+    orisai.time: OriNette\Time\DI\TimeExtension
 ```
 
 ## Timezone
@@ -31,7 +31,7 @@ package into an existing application, you shouldn't.
 UTC-using apps are easier to host and/or use simultaneously in multiple timezones.
 
 ```neon
-time:
+orisai.time:
     timezone: Europe/Prague
 ```
 
@@ -64,7 +64,7 @@ By default is used `SystemClock` which provides system time, but you can change 
 
 ```neon
 services:
-    time.clock:
+    orisai.time.clock:
         # Accepts epoch second (timestamp)
         factory: Brick\DateTime\Clock\FixedClock(Brick\DateTime\Instant(978307200))
 ```
